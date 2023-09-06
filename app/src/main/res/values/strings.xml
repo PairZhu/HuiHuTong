@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">慧湖通-极速版</string>
+    <string name="qrcode_description">二维码</string>
+    <string name="setOpenId">修改OpenId</string>
+</resources>

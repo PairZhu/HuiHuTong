@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tips"
+        android:textSize="20sp"/>
+    <ImageView
+        android:id="@+id/qrcode_image"
+        android:layout_width="1000px"
+        android:layout_height="1000px"
+        android:layout_gravity="center"
+        android:contentDescription="@string/qrcode_description" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/setOpenId"
+        android:id="@+id/set_openid"
+        android:padding="15sp"
+        android:textSize="20sp"/>
+</LinearLayout>
