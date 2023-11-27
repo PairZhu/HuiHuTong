@@ -9,6 +9,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -42,24 +44,63 @@ public class MainActivity extends AppCompatActivity {
     private String satoken = "";
     private String openId = "";
     private final int REQUEST_INTERVAL = 8000; // 请求间隔时间（毫秒）
+    private float scaleFactor = 1.0f;
+    private boolean inScaling = false;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        qrcodeImageView = findViewById(R.id.qrcode_image);
-        tipsView = findViewById(R.id.tips);
 
         final SharedPreferences sharedPreferences = getSharedPreferences("settings", MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
         satoken = sharedPreferences.getString("satoken", "");
         openId = sharedPreferences.getString("openId", "");
+        scaleFactor = sharedPreferences.getFloat("scale", 1.0f);
+
+        qrcodeImageView = findViewById(R.id.qrcode_image);
+        tipsView = findViewById(R.id.tips);
+
+        final int imgSize = getResources().getDisplayMetrics().widthPixels;
+        qrcodeImageView.getLayoutParams().width = imgSize;
+        qrcodeImageView.getLayoutParams().height = imgSize;
+        qrcodeImageView.requestLayout();
+        qrcodeImageView.setScaleX(scaleFactor);
+        qrcodeImageView.setScaleY(scaleFactor);
 
         final Button setOpenIdBtn = findViewById(R.id.set_openid);
         setOpenIdBtn.setOnClickListener(v -> inputOpenId("修改OpenId"));
         qrcodeImageView.setOnClickListener(v -> refreshQRCode());
+
+        final ScaleGestureDetector scaleGestureDetector = new ScaleGestureDetector(this, new ScaleGestureDetector.OnScaleGestureListener() {
+            @Override
+            public boolean onScale(ScaleGestureDetector detector) {
+                scaleFactor *= detector.getScaleFactor();
+                scaleFactor = Math.max(0.4f, Math.min(scaleFactor, 1.0f)); // 控制缩放范围
+                qrcodeImageView.setScaleX(scaleFactor);
+                qrcodeImageView.setScaleY(scaleFactor);
+                return false;
+            }
+
+            @Override
+            public boolean onScaleBegin(ScaleGestureDetector detector) {
+                return true;
+            }
+
+            @Override
+            public void onScaleEnd(ScaleGestureDetector detector) {
+                editor.putFloat("scale", scaleFactor).apply();
+            }
+        });
+
+        qrcodeImageView.setOnTouchListener((v,event)->{
+            scaleGestureDetector.onTouchEvent(event);
+            boolean disableClick = scaleGestureDetector.isInProgress() || inScaling;
+            inScaling = scaleGestureDetector.isInProgress() || (inScaling && event.getAction()!=MotionEvent.ACTION_UP);
+            return disableClick;
+        });
     }
 
     private void inputOpenId(String msg) {
@@ -71,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setView(input);
         builder.setPositiveButton("确定", (dialog, which) -> {
             openId = input.getText().toString();
-            editor.putString("openId", openId).apply();
+            editor.putString("openId", openId);
             satoken = "";
             editor.putString("satoken", satoken).apply();
             refreshQRCode();

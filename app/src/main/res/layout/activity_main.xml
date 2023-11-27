@@ -11,9 +11,10 @@
         android:textSize="20sp"/>
     <ImageView
         android:id="@+id/qrcode_image"
-        android:layout_width="1000px"
-        android:layout_height="1000px"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
         android:layout_gravity="center"
+        android:scaleType="centerInside"
         android:contentDescription="@string/qrcode_description" />
     <Button
         android:layout_width="wrap_content"
