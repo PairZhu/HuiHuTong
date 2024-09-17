@@ -1,10 +1,13 @@
 # HuiHuTong
  慧湖通刷闸机的二维码秒开版
+ 此项目仅支持安卓客户端，ios可以使用[WEB版本](https://github.com/mercutiojohn/hht-web)（纯前端的PWA应用，无密钥泄露风险，可以安装到手机桌面） 
 # 使用方法
 1. 电脑安装抓包工具，比如fiddler，开始抓包
 2. 打卡微信PC版，用PC版打开慧湖通小程序并确保已登录
 3. 打卡成功后，找到请求中的`https://api.215123.cn/web-app/auth/certificateLogin?openId=xxx&unionId=xxx`，复制URL中的`openId`参数
 4. 将`openId`参数填入本项目的软件中
+5. 二维码会定时自动刷新（点击二维码可手动刷新）
+6. 双指可以缩放二维码大小
 
 # 抓包教程（以Fiddler4为例）
 1. 下载并安装Fiddler4（官网： https://www.telerik.com/fiddler ）
