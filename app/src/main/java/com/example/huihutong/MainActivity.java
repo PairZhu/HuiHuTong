@@ -1,6 +1,7 @@
 package com.example.huihutong;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.SharedPreferences;
@@ -11,6 +12,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -47,11 +49,20 @@ public class MainActivity extends AppCompatActivity {
     private float scaleFactor = 1.0f;
     private boolean inScaling = false;
 
+    private void setBrightnessMax(Activity activity){
+        WindowManager.LayoutParams systemLayoutAttr = activity.getWindow().getAttributes();
+
+        systemLayoutAttr.screenBrightness = 1;
+
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        setBrightnessMax(this);
 
         final SharedPreferences sharedPreferences = getSharedPreferences("settings", MODE_PRIVATE);
         editor = sharedPreferences.edit();
