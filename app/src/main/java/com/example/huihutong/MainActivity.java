@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -46,6 +47,16 @@ public class MainActivity extends AppCompatActivity {
     private final int REQUEST_INTERVAL = 8000; // 请求间隔时间（毫秒）
     private float scaleFactor = 1.0f;
     private boolean inScaling = false;
+
+    /**
+     * 把本界面的屏幕亮度设为最高，方便闸机/扫码设备识别二维码。
+     * 只作用于本界面所在的窗口（窗口级亮度，无需 WRITE_SETTINGS 权限），离开本界面后自动失效。
+     */
+    private void setBrightnessMax() {
+        final WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
+        layoutParams.screenBrightness = 1.0f;
+        getWindow().setAttributes(layoutParams);
+    }
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -233,6 +244,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        setBrightnessMax();
         refreshQRCode();
     }
 
